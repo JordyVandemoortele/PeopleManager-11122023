@@ -1,0 +1,50 @@
+﻿@page "/"
+@using PeopleManager.Dto.Results
+@using PeopleManager.Sdk
+@using PeopleManager.Ui.BlazorApp.Components.Dialogs
+
+@inject PersonApiService PersonApiService
+
+<PageTitle>People Manager</PageTitle>
+
+<h1>This is a modal test</h1>
+<Modal UseFade="true" @ref="Dialog">
+    <Header>
+
+    </Header>
+    <Body>
+
+    </Body>
+    <Footer>
+
+    </Footer>
+</Modal>
+<button class="btn btn-primary" @onclick="() => Dialog?.Open()">Open Modal Dialog</button>
+
+<h1>People Manager</h1>
+
+
+<div class="row">
+    @foreach (var person in Model)
+    {
+        <div class="col-4">
+            <PersonCard Model="@person" />
+        </div>
+    }
+</div>
+
+@code
+{
+    private Modal? Dialog { get; set; }
+
+    private IList<PersonResult> Model { get; set; } = new List<PersonResult>();
+   
+    protected override async Task OnInitializedAsync()
+    {
+        var serviceResult = await PersonApiService.FindAsync();
+
+        Model = serviceResult.Data;
+
+        await base.OnInitializedAsync();
+    }
+}
